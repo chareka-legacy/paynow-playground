@@ -13,17 +13,47 @@
 
     <flux:navlist variant="outline">
         <flux:navlist.group>
-            <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
-                               wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+            <flux:navlist.item
+                icon="home"
+                :href="route('dashboard')"
+                :current="request()->routeIs('dashboard')"
+                wire:navigate>
+                {{ __('Dashboard') }}
+            </flux:navlist.item>
+        </flux:navlist.group>
+    </flux:navlist>
+
+    <flux:navlist variant="outline">
+        <flux:navlist.group  heading="New Session" class="grid">
+            <flux:navlist.item
+                icon="plus"
+                :href="route('channels.paynow')"
+                :current="request()->routeIs('channels.paynow')"
+                wire:navigate>
+                {{ __('Paynow') }}
+            </flux:navlist.item>
+            <flux:navlist.item
+                icon="plus"
+                :href="route('channels.stripe')"
+                :current="request()->routeIs('channels.stripe')"
+                wire:navigate>
+                {{ __('Stripe') }}
+            </flux:navlist.item>
         </flux:navlist.group>
     </flux:navlist>
 
     <flux:navlist variant="outline">
         <flux:navlist.group heading="Saved Sessions" class="grid">
             @foreach(auth()->user()->sessions ?? [] as $name => $session)
-                <flux:navlist.item icon="folder-git-2" href="{{ route('dashboard', ['id' => $session]) }}">
-                    {{ $name }}
-                </flux:navlist.item>
+                @if(is_array($session))
+                    <flux:navlist.item icon="folder-git-2" href="{{ route($session['route'], ['id' => $session['id']]) }}">
+                        {{ $name }}
+                    </flux:navlist.item>
+                @else
+                    <flux:navlist.item icon="folder-git-2" href="{{ route('channels.paynow', ['id' => $session]) }}">
+                        {{ $name }}
+                    </flux:navlist.item>
+                @endif
             @endforeach
         </flux:navlist.group>
     </flux:navlist>
